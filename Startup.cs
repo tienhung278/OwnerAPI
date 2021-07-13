@@ -12,6 +12,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using OwnerAPI.Extensions;
+using OwnerAPI.Middlewares;
 
 namespace OwnerAPI
 {
@@ -46,6 +47,8 @@ namespace OwnerAPI
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "OwnerAPI v1"));
             }
+
+            app.UseMiddleware<ExceptionHandler>();
 
             app.UseHttpsRedirection();
 

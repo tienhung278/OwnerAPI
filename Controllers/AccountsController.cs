@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Text.Json;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using OwnerAPI.Contracts;
 using OwnerAPI.Dtos;
 using OwnerAPI.Entities;
@@ -15,12 +17,15 @@ namespace OwnerAPI.Controllers
     {
         private readonly IRepositoryWrapper repository;
         private readonly IMapper mapper;
+        private readonly ILogger<AccountsController> logger;
 
         public AccountsController(IRepositoryWrapper repository,
-                                IMapper mapper)
+                                IMapper mapper,
+                                ILogger<AccountsController> logger)
         {
             this.repository = repository;
             this.mapper = mapper;
+            this.logger = logger;
         }
 
         [HttpGet]
