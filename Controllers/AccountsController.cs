@@ -32,7 +32,8 @@ namespace OwnerAPI.Controllers
         public async Task<IActionResult> GetAllAccounts()
         {
             var accounts = await repository.Account.GetAllAccountsAsync();
-            return Ok(mapper.Map<IEnumerable<AccountForRead>>(accounts));
+            var accountForReads = mapper.Map<IEnumerable<AccountForRead>>(accounts);
+            return Ok(accountForReads);
         }
 
         [HttpGet("{id}")]
@@ -43,18 +44,20 @@ namespace OwnerAPI.Controllers
             {
                 return NotFound();
             }
-            return Ok(mapper.Map<AccountForRead>(account));
+            var accountForRead = mapper.Map<AccountForRead>(account);
+            return Ok(accountForRead);
         }
 
         [HttpGet("{id}/details")]
-        public async Task<IActionResult> GetAccountsByOwner(Guid ownerId)
+        public async Task<IActionResult> GetAccountWithDetails(Guid id)
         {
-            var accounts = await repository.Account.GetAccountsByOwnerAsync(ownerId);
-            if (accounts == null)
+            var account = await repository.Account.GetAccountWithDetailsAsync(id);
+            if (account == null)
             {
                 return NotFound();
             }
-            return Ok(mapper.Map<IEnumerable<AccountForRead>>(accounts));
+            var accountDetailsForRead = mapper.Map<AccountDetailsForRead>(account);
+            return Ok(accountDetailsForRead);
         }
 
         [HttpPost]
@@ -67,7 +70,8 @@ namespace OwnerAPI.Controllers
             var account = mapper.Map<Account>(accountForCreate);
             repository.Account.CreateAccount(account);
             await repository.SaveAsync();
-            return CreatedAtAction("GetAccountById", new { id = account.Id }, account);
+            var accountForRead = mapper.Map<AccountForRead>(account);
+            return CreatedAtAction("GetAccountById", new { id = account.Id }, accountForRead);
         }
 
         [HttpPut("{id}")]

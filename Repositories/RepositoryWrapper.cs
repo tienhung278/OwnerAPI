@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using OwnerAPI.Contracts;
 
 namespace OwnerAPI.Repositories
@@ -6,12 +7,18 @@ namespace OwnerAPI.Repositories
     public class RepositoryWrapper : IRepositoryWrapper
     {
         private readonly RepositoryContext context;
+        private readonly ILogger<OwnerRepository> ownerLogger;
+        private readonly ILogger<AccountRepository> accountLogger;
         private IOwnerRepository owner;
         private IAccountRepository account;
 
-        public RepositoryWrapper(RepositoryContext context)
+        public RepositoryWrapper(RepositoryContext context,
+                                ILogger<OwnerRepository> ownerLogger,
+                                ILogger<AccountRepository> accountLogger)
         {
             this.context = context;
+            this.ownerLogger = ownerLogger;
+            this.accountLogger = accountLogger;
         }
 
         public IOwnerRepository Owner
@@ -20,7 +27,7 @@ namespace OwnerAPI.Repositories
             {
                 if (owner == null)
                 {
-                    owner = new OwnerRepository(context);
+                    owner = new OwnerRepository(context, ownerLogger);
                 }
                 return owner;
             }            
@@ -32,7 +39,7 @@ namespace OwnerAPI.Repositories
             {
                 if (account == null)
                 {
-                    account = new AccountRepository(context);
+                    account = new AccountRepository(context, accountLogger);
                 }
                 return account;
             }

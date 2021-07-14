@@ -9,6 +9,7 @@ namespace OwnerAPI.Contracts
     {
         Task<IEnumerable<Account>> GetAllAccountsAsync();
         Task<Account> GetAccountByIdAsync(Guid id);
+        Task<Account> GetAccountWithDetailsAsync(Guid id);
         Task<IEnumerable<Account>> GetAccountsByOwnerAsync(Guid ownerId);
         void CreateAccount(Account account);
         void UpdateAccount(Account account);

@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using OwnerAPI.Entities;
 
 namespace OwnerAPI.Middlewares
 {
@@ -26,6 +27,8 @@ namespace OwnerAPI.Middlewares
             catch (Exception ex)
             {
                 logger.LogError(ex, ex.Message);
+                context.Response.StatusCode = 500;
+                await context.Response.WriteAsJsonAsync<ErrorResponse>(new ErrorResponse{ ErrorMessage = ex.Message});
             }
         }
     }

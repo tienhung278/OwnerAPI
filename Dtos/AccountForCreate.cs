@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using OwnerAPI.Entities;
 
 namespace OwnerAPI.Dtos
 {
@@ -15,6 +16,6 @@ namespace OwnerAPI.Dtos
         [Required(ErrorMessage = "Owner id is required")]
         [MaxLength(36, ErrorMessage = "Owner id can't be longer than 36 characters")]
         [MinLength(36, ErrorMessage = "Owner id can't be shorter than 36 characters")]
-        public Guid OwnerId { get; set; }
+        public string ownerId { get; set; }
     }
 }

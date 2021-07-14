@@ -34,21 +34,32 @@ namespace OwnerAPI.Controllers
         public async Task<IActionResult> GetAllOwners()
         {
             var owners = await repository.Owner.GetAllOwnersAsync();
-            return Ok(mapper.Map<IEnumerable<OwnerForRead>>(owners));
+            var ownerForReads = mapper.Map<IEnumerable<OwnerForRead>>(owners);
+            return Ok(ownerForReads);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetOwnerById(Guid id)
         {
             var owner = await repository.Owner.GetOwnerByIdAsync(id);
-            return Ok(mapper.Map<OwnerForRead>(owner));
+            if (owner == null)
+            {
+                return NotFound();
+            }
+            var ownerForRead = mapper.Map<OwnerForRead>(owner);
+            return Ok(ownerForRead);
         }
 
         [HttpGet("{id}/details")]
         public async Task<IActionResult> GetOwnerWithDetails(Guid id)
         {
-            var owners = await repository.Owner.GetOwnerWithDetailsAsync(id);
-            return Ok(mapper.Map<OwnerForRead>(owners));
+            var owner = await repository.Owner.GetOwnerWithDetailsAsync(id);
+            if (owner == null)
+            {
+                return NotFound();
+            }
+            var ownerDetailsForRead = mapper.Map<OwnerDetailsForRead>(owner);
+            return Ok(ownerDetailsForRead);
         }
 
         [HttpPost]
@@ -61,7 +72,8 @@ namespace OwnerAPI.Controllers
             var owner = mapper.Map<Owner>(ownerForCreate);
             repository.Owner.CreateOwner(owner);
             await repository.SaveAsync();
-            return CreatedAtAction("GetOwnerById", new { id = owner.Id }, owner);
+            var ownerForRead = mapper.Map<OwnerForRead>(owner);
+            return CreatedAtAction("GetOwnerById", new { id = owner.Id }, ownerForRead);
         }
 
         [HttpPut("{id}")]

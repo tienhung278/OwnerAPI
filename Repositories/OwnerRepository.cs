@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using OwnerAPI.Contracts;
 using OwnerAPI.Entities;
 
@@ -9,7 +10,8 @@ namespace OwnerAPI.Repositories
 {
     public class OwnerRepository : RepositoryBase<Owner>, IOwnerRepository
     {
-        public OwnerRepository(RepositoryContext context) : base(context)
+        public OwnerRepository(RepositoryContext context,
+                                ILogger<OwnerRepository> logger) : base(context, logger)
         {
         }
 
@@ -37,8 +39,8 @@ namespace OwnerAPI.Repositories
 
         public async Task<Owner> GetOwnerWithDetailsAsync(Guid id)
         {
-            return await FindByCondition(o => o.Id.Equals(id))
-                        .Include(o => o.Accounts)
+
+            return await FindByConditionWithDetails(o => o.Id.Equals(id), "Accounts")
                         .FirstOrDefaultAsync();
         }
 
